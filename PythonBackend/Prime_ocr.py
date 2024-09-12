@@ -4,6 +4,18 @@ from fuzzywuzzy import fuzz
 import sys
 from wx_ocr import WxOcr
 
+#用于隐藏print输出
+class HiddenPrints:
+    def __enter__(self):
+        self._original_stdout = sys.stdout
+        sys.stdout = open(os.devnull, 'w')
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        sys.stdout.close()
+        sys.stdout = self._original_stdout
+
+
+
 class PrimeOcr:
     """
     调用微信本地ocr，传入图片相对路径或绝对路径
@@ -16,12 +28,15 @@ class PrimeOcr:
         self.comparison_list = json.load(open("static/tradable_parts_name.json", "r", encoding="utf-8"))
         # 调用wx_ocr
         ocr_result = self.wx_ocr_result_callback(self.img_path)
-        print(ocr_result)
+
         # 最终处理要返回的结果process_result
         self.process_result = self.process_wxocr_result(ocr_result)
 
     def wx_ocr_result_callback(self, img_path):
-        return WxOcr(img_path).results
+        # 屏蔽掉打印信息
+        with HiddenPrints():
+            ocr_result = WxOcr(img_path).results
+        return ocr_result
 
     def process_wxocr_result(self, ocr_results):
         # 存储最终合并后的文本
@@ -90,7 +105,7 @@ class PrimeOcr:
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python my_class.py [your_name]")
+        print("Usage: python Prime_ocr.py 图片路径")
     else:
         # 使用从命令行接收的第一个参数
         obj = PrimeOcr(sys.argv[1])

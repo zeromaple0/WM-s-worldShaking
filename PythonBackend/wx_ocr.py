@@ -1,4 +1,5 @@
 import os
+import sys
 
 from wechat_ocr.ocr_manager import OcrManager, OCR_MAX_TASK_ID
 #后面改成在配置文件中读取相关路径
