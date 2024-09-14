@@ -14,12 +14,12 @@ class RivenOrdersProcess:
       """
 
     def __init__(self, weapon_url_list, days, count_orders):
-        self.days = days
-        self.weapon_url_list = weapon_url_list
-        self.count_orders = count_orders
+        self.days = int(days)
+        self.weapon_url_list = weapon_url_list.split(',')
+        self.count_orders = int(count_orders)
         # 初始化一个字典，保存url_name，和count_orders数量的最低价
         self.riven_dict = {}
-
+        self.main()
     def main(self):
 
         # 尝试获取订单JSON数据
@@ -40,7 +40,7 @@ class RivenOrdersProcess:
                         # 保存每一笔订单的价格
                         price_list.append(order['buyout_price'])
                 except Exception as e:
-                    print(f"错误：尝试提取过滤订单时出错，请检查传入的参数")
+                    print(f"错误：尝试提取过滤订单时出错，请检查传入的参数"+e)
                     return
 
             else:
@@ -111,7 +111,7 @@ class RivenOrdersProcess:
         print(self.riven_dict)
 
 
-if __name__ == '__main__':
-    wepon_url_list = ['magistar','arca_titron','torid']
-    rivenprice = RivenOrdersProcess(wepon_url_list, days=30, count_orders=4)
-    rivenprice.main()
+# if __name__ == '__main__':
+#     wepon_url_list = ['magistar','arca_titron','torid']
+#     rivenprice = RivenOrdersProcess(wepon_url_list, days=30, count_orders=4)
+    # rivenprice.main()
