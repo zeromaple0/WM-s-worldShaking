@@ -9,8 +9,7 @@ class RivenOrdersProcess:
         weapon_url:武器的url_name
         days:需要查询多少天内的订单
         count_orders：需要查询多少个订单
-        数据保存在riven_dict字典中
-        {'magistar': ['magistar', 450, 450, 479, 480], 'arca_titron': ['arca_titron', 150, 160, 160, 170], 'torid': ['torid', 500, 500, 540, 550]}
+
       """
 
     def __init__(self, weapon_url_list, days, count_orders):
@@ -19,9 +18,11 @@ class RivenOrdersProcess:
         self.count_orders = int(count_orders)
         # 初始化一个字典，保存url_name，和count_orders数量的最低价
         self.riven_dict = {}
+        # 这个字典保存上面的字典
+        self.orders_dict_to_json={}
         self.main()
     def main(self):
-
+        list=[]
         # 尝试获取订单JSON数据
         for weapon_url in self.weapon_url_list:
             # 保存每笔订单的价格 列表
@@ -45,8 +46,13 @@ class RivenOrdersProcess:
 
             else:
 
-                self.riven_dict[weapon_url] = [weapon_url] + price_list
-            self.riven_dict[weapon_url] = [weapon_url] + price_list
+
+                list+=[weapon_url,price_list]
+
+
+            list+=[weapon_url,price_list]
+            print(list)
+        self.orders_dict_to_json['orders']=list
         # 打印订单
         self.print_orders()
 
@@ -108,7 +114,7 @@ class RivenOrdersProcess:
 
     # 打印字典里面的内容
     def print_orders(self):
-        print(self.riven_dict)
+        print(self.orders_dict_to_json)
 
 
 # if __name__ == '__main__':

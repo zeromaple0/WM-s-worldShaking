@@ -70,32 +70,49 @@ def getprimeprice(request):
         # 错误的方法类型
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+
 """
 请求方法POST
 {
-    "weapon_url_name_list": "magistar,quartakk",
-    "days": 30,
-    "count_orders": 3
+    "orders": [
+        "magistar",
+        [
+            500,
+            500,
+            545,
+            550,
+            550
+        ],
+        "quartakk",
+        [
+            5,
+            5,
+            5,
+            8,
+            9
+        ]
+    ]
 }
 
 """
-def getrivenprice(request):
 
-    if request.method=='POST':
+
+def getrivenprice(request):
+    if request.method == 'POST':
         try:
             # 从POST请求体中获取数据
             # 首先检查请求体是否为空
             if not request.body:
                 print(request.body)
                 return JsonResponse({'error': 'Request body is empty'}, status=400)
-            body_str=request.body.decode('utf-8')
-            data=json.loads(body_str)
-            weapon_url_name_list=data.get('weapon_url_name_list')
+            body_str = request.body.decode('utf-8')
+            data = json.loads(body_str)
+            weapon_url_name_list = data.get('weapon_url_name_list')
             days = data.get('days')
             count_orders = data.get('count_orders')
 
             rivenprice = get_and_print_riven_orders.RivenOrdersProcess(weapon_url_name_list, days, count_orders)
-            json_data = json.dumps(rivenprice.riven_dict)
+            json_data = json.dumps(rivenprice.orders_dict_to_json)
             return HttpResponse(json_data)
         except Exception as e:
             print(e)
