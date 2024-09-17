@@ -46,12 +46,10 @@ def getprimeprice(request):
 
             # 开始处理订单
             price = get_and_print_prime_orders.PrimeOrdersProcess(prime_url_name_list, search_online)
-
             # 把price.prime_dict转为json
-            json_data = json.dumps(price.prime_dict, ensure_ascii=False)
-
+            json_data = json.dumps(price.prime_dict)
             # 返回JSON响应
-            return JsonResponse(json_data, safe=False)
+            return HttpResponse(json_data)
 
         except json.JSONDecodeError as e:
             # 处理JSON解码错误
