@@ -9,6 +9,7 @@ from .PythonBackend import get_and_print_riven_orders
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
+
 # 获取logger实例
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,8 @@ logger = logging.getLogger(__name__)
     "search_online": "False"
 }
 """
+
+
 def getprimeprice(request):
     if request.method == 'POST':
         try:
@@ -36,7 +39,7 @@ def getprimeprice(request):
 
             # 获取参数
             prime_url_name_list = data.get('prime_url_name_list')
-            search_online = data.get('search_online', False)
+            search_online = data.get('search_online', 0)  # 默认值0，不进行在线查询
             # 打印接收到的参数
             logger.info("得到的prime_url_name_list为：%s", prime_url_name_list)
             logger.info("得到的search_online为：%s", search_online)
@@ -68,6 +71,7 @@ def getprimeprice(request):
     else:
         # 错误的方法类型
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 
 def getrivenprice(request):
     # 初始化列表weapon_url_name_list

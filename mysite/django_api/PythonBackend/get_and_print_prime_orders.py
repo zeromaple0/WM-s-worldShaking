@@ -29,10 +29,11 @@ class PrimeOrdersProcess:
     {'galatine_prime_handle': '['galatine_prime_handle', '3', '4', '5']'}
     """
 
-    def __init__(self, prime_url_name_list, search_online=False):
+    def __init__(self, prime_url_name_list, search_online):
         self.prime_url_name_list = prime_url_name_list.split(',')
         # 是否查询在线订单
         self.search_online = search_online
+        print("是否在线订单："+str(search_online))
         # 初始化一个字典，保存url_name，和三个最低价price1,price2,price3
         self.prime_dict = {}
         self.main(self.prime_url_name_list)
@@ -88,7 +89,7 @@ class PrimeOrdersProcess:
         top_prices = []
         # 从本地读取primeprice.csv文件中的订单数据
 
-        with open(f'{project_path}\static\primeprice.csv', mode='r', encoding='utf-8') as file:
+        with open(f'{project_path}/static/primeprice.csv', mode='r', encoding='utf-8') as file:
             reader = csv.DictReader(file)  # 创建一个字典阅读器
             for row in reader:  # 遍历每一行
                 if row['url_name'] == url_name:
