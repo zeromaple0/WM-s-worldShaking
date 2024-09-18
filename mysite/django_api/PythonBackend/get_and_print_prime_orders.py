@@ -42,7 +42,8 @@ class PrimeOrdersProcess:
         #     print(f"{key}: {value}")
 
     def main(self, prime_url_name_list):
-
+        list=[]
+        dictdate={}
         for url_name in prime_url_name_list:
             # 是否查询在线订单
             if self.search_online:
@@ -51,11 +52,17 @@ class PrimeOrdersProcess:
                 order_json = self.fetch_sell_orders(url_name)
                 # 返回带有3个价格的订单列表
                 price_list = self.extract_and_filter_orders(order_json)
+                dictdate['url_name'] = url_name
+                dictdate['price_list'] = price_list
+                list += [dictdate]
             else:
                 # 本地查询
                 price_list = self.get_prime_prices_local(url_name)
+                dictdate['url_name'] = url_name
+                dictdate['price_list'] = price_list
+                list += [dictdate]
             # 构造指定格式列表[url_name,price_list[0],price_list[1],price_list[2]]，添加到字典
-            self.prime_dict[url_name] = [url_name] + price_list
+        self.prime_dict['orders'] = list
 
     def fetch_sell_orders(self, url_name):
         url = f'https://api.warframe.market/v1/items/{url_name}/orders'
