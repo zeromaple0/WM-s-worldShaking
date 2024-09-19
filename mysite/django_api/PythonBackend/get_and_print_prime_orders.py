@@ -56,7 +56,8 @@ class PrimeOrdersProcess:
                 dictdate['price_list'] = price_list
                 list += [dictdate]
             else:
-                # 本地查询
+                # 本地数据库查询
+
                 price_list = self.get_prime_prices_local(url_name)
                 dictdate['url_name'] = url_name
                 dictdate['price_list'] = price_list

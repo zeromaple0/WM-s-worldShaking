@@ -1,9 +1,11 @@
 import json
 import logging
 
+from django.core import serializers
 from django.http import HttpResponse, JsonResponse
 from .PythonBackend import get_and_print_prime_orders
 from .PythonBackend import get_and_print_riven_orders
+from .models import PrimePriceManager, PrimePrice
 
 
 def index(request):
@@ -40,6 +42,22 @@ def getprimeprice(request):
             # 获取参数
             prime_url_name_list = data.get('prime_url_name_list')
             search_online = data.get('search_online', 0)  # 默认值0，不进行在线查询
+            # 进行本地数据库查询
+            if search_online == 0:
+                print("开始本地数据库查询")
+                # 初始化一个列表保存结果
+                prime_price_list = []
+                # 初始化一个字典用于转为json
+                prime_price_dict = {}
+
+                for url_name in prime_url_name_list.split(','):
+                    print("正在查询:" + url_name)
+                    primeprice = PrimePrice.objects.get_prime_price(url_name)
+
+                    prime_price_list.append(primeprice)
+
+                prime_price_dict['orders'] = prime_price_list
+                return JsonResponse(prime_price_dict)
             # 打印接收到的参数
             logger.info("得到的prime_url_name_list为：%s", prime_url_name_list)
             logger.info("得到的search_online为：%s", search_online)
