@@ -1,11 +1,12 @@
 import json
 import logging
 
-from django.core import serializers
 from django.http import HttpResponse, JsonResponse
+
 from .PythonBackend import get_and_print_prime_orders
 from .PythonBackend import get_and_print_riven_orders
-from .models import PrimePriceManager, PrimePrice
+from .models import PrimePrice
+from .update_price import Update_prime_price
 
 
 def index(request):
@@ -14,6 +15,24 @@ def index(request):
 
 # 获取logger实例
 logger = logging.getLogger(__name__)
+
+
+def update_prime_price(request):
+    if request.method == 'POST':
+        try:
+            # 解码请求体
+            body_str = request.body.decode('utf-8')
+
+            # 解析JSON数据
+            data = json.loads(body_str)
+            # 接受最新数据的绝对路径,使用os.path来处理接受到的路径
+            update_file_url = data.get('update_file_url')
+            print("接受到的路径为：" + update_file_url)
+            update = Update_prime_price(update_file_url)
+            return JsonResponse({'message': f'prime price 价格更新成功,{update.count}条数据发生变化'})
+        except Exception as e:
+            print(e)
+
 
 """
 请求方法POST ，json格式发送
