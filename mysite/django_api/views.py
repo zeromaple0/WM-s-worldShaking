@@ -16,7 +16,13 @@ def index(request):
 # 获取logger实例
 logger = logging.getLogger(__name__)
 
-
+"""
+更新本地数据库
+传入参数
+{
+    "update_file_url": "C:\\Users\\cc\\Downloads\\price_091915.csv"
+}
+"""
 def update_prime_price(request):
     if request.method == 'POST':
         try:
@@ -25,7 +31,7 @@ def update_prime_price(request):
 
             # 解析JSON数据
             data = json.loads(body_str)
-            # 接受最新数据的绝对路径,使用os.path来处理接受到的路径
+
             update_file_url = data.get('update_file_url')
             print("接受到的路径为：" + update_file_url)
             update = Update_prime_price(update_file_url)
