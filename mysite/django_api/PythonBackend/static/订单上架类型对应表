@@ -1,0 +1,9 @@
+//MOD 类型 保温服
+{
+    "item_id": "54a74455e779892d5e5156e4",
+    "order_type": "sell",
+    "platinum": 5,
+    "quantity": 22,
+    "visible": true,
+    "rank": 0
+}

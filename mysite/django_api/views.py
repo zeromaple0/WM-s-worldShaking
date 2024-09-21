@@ -6,7 +6,7 @@ from django.http import HttpResponse, JsonResponse
 from .PythonBackend import get_and_print_prime_orders
 from .PythonBackend import get_and_print_riven_orders
 from .PythonBackend import login
-from .models import PrimePrice
+from .models import PrimePrice, RivenPrice
 from .update_price import Update_prime_price, Update_riven_price
 
 
@@ -163,6 +163,23 @@ def getrivenprice(request):
             weapon_url_name_list = data.get('weapon_url_name_list')
             days = data.get('days')
             count_orders = data.get('count_orders')
+            # 本地查询
+            if data.get('search_online') == 0:
+                print("开始本地数据库查询")
+                # 初始化一个列表保存结果
+                riven_price_list = []
+                # 初始化一个字典用于转为json
+                riven_price_dict = {}
+
+                for url_name in weapon_url_name_list.split(','):
+                    print("正在查询:" + url_name)
+                    rivenprice = RivenPrice.objects.get_riven_price(url_name)
+
+                    riven_price_list.append(rivenprice)
+
+                riven_price_dict['orders'] = riven_price_list
+                return JsonResponse(riven_price_dict)
+
 
             rivenprice = get_and_print_riven_orders.RivenOrdersProcess(weapon_url_name_list, days, count_orders)
             json_data = json.dumps(rivenprice.orders_dict_to_json)
