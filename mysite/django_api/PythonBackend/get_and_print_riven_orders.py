@@ -24,7 +24,7 @@ class RivenOrdersProcess:
 
     def main(self):
         list = []
-        dictdate = {}
+
         # 尝试获取订单JSON数据
         for weapon_url in self.weapon_url_list:
             # 保存每笔订单的价格 列表
@@ -36,6 +36,7 @@ class RivenOrdersProcess:
                 return
 
             if orders_json is not None:
+                dictdate = {}
                 # 尝试提取并过滤订单
                 try:
                     get_orders = self.extract_and_filter_orders(orders_json, self.count_orders, self.days)
@@ -49,11 +50,6 @@ class RivenOrdersProcess:
                     print(f"错误：尝试提取过滤订单时出错，请检查传入的参数" + e)
                     return
 
-            else:
-
-                dictdate['weapon_url'] = weapon_url
-                dictdate['price_list'] = price_list
-                list += [dictdate]
             print(list)
         self.orders_dict_to_json['orders'] = list
         # 打印订单
