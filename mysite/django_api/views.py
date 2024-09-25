@@ -3,7 +3,7 @@ import logging
 
 from django.http import HttpResponse, JsonResponse
 
-from .PythonBackend import get_and_print_prime_orders
+from .PythonBackend import get_and_print_prime_orders, get_message
 from .PythonBackend import get_and_print_riven_orders
 from .PythonBackend import login
 from .models import PrimePrice, RivenPrice
@@ -48,6 +48,7 @@ def update_prime_price(request):
         except Exception as e:
             print(e)
 
+
 def update_riven_price(request):
     if request.method == 'POST':
         try:
@@ -63,8 +64,6 @@ def update_riven_price(request):
             print(e)
 
 
-
-
 """
 请求方法POST ，json格式发送
 {
@@ -72,6 +71,8 @@ def update_riven_price(request):
     "search_online": 0                     //0表示本地查询，1为在线查询，默认为0
 }
 """
+
+
 def getprimeprice(request):
     if request.method == 'POST':
         try:
@@ -180,7 +181,6 @@ def getrivenprice(request):
                 riven_price_dict['orders'] = riven_price_list
                 return JsonResponse(riven_price_dict)
 
-
             rivenprice = get_and_print_riven_orders.RivenOrdersProcess(weapon_url_name_list, days, count_orders)
             json_data = json.dumps(rivenprice.orders_dict_to_json)
             return HttpResponse(json_data)
@@ -199,8 +199,27 @@ def login2wm(request):
             password = data.get('password')
             device_id = data.get('device_id')
             login_obj = login.Login(email, password, device_id)
-            return HttpResponse(login_obj.response)
+            print(login_obj.response)
+            return JsonResponse(login_obj.response)
         except Exception as e:
             print(e)
 
 
+def getmessage(request):
+    if request.method == 'POST':
+        try:
+            body_str = request.body.decode('utf-8')
+            data = json.loads(body_str)
+            # 是否开启消息监听
+            ismessage = data.get('ismessage')
+            # 如果ismessage为1，则开启消息监听
+
+            if ismessage == 1:
+                message = get_message.Get_message()
+                return JsonResponse(message.back_response)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+            print(e)
+    else:
+        return HttpResponse('Invalid request method', status=405)
